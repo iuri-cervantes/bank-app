@@ -118,9 +118,6 @@ export const Login: React.FC = () => {
                     </S.ButtonSubmit>
                 </S.SectionWrapper>
                 <S.SectionWrapper style={{ gap: 10 }}>
-                    <S.ButtonInvisible onPress={() => handleNavigate('RecoverPassword')}>
-                        <S.InfoText >Esqueceu sua senha?</S.InfoText>
-                    </S.ButtonInvisible>
                     <S.ButtonInvisible onPress={() => handleNavigate('SignUp')}>
                         <S.InfoText>Crie sua conta!</S.InfoText>
                     </S.ButtonInvisible>

@@ -198,9 +198,6 @@ export const SignUp: React.FC = () => {
                         </S.ButtonSubmit>
                     </S.SectionWrapper>
                     <S.SectionWrapper style={{ gap: 10 }}>
-                        <S.ButtonInvisible onPress={() => { if (chronoTime === 0) handleOpenConfirmModal() }}>
-                            <S.InfoText>Não recebeu o e-mail? Reenviar{chronoTime != 0 ? `(${chronoTime})` : ''}</S.InfoText>
-                        </S.ButtonInvisible>
                         <S.ButtonInvisible onPress={() => handleNavigate('Login')}>
                             <S.InfoText>Ja possui conta? Entrar.</S.InfoText>
                         </S.ButtonInvisible>
