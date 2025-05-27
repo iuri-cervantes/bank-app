@@ -142,7 +142,7 @@ export const SignUp: React.FC = () => {
                             placeholder="Insira seu nome de usuário"
                             placeholderTextColor={
                                 theme[currentTheme || 'dark'].colors
-                                    .placeHolder
+                                    .placeholder
                             }
                             onChangeText={text => setUserName(text)}
                             returnKeyType="done"
@@ -155,7 +155,7 @@ export const SignUp: React.FC = () => {
                             placeholder="Insira seu e-mail"
                             placeholderTextColor={
                                 theme[currentTheme || 'dark'].colors
-                                    .placeHolder
+                                    .placeholder
                             }
                             onChangeText={text => setEmail(text)}
                             returnKeyType="done"
@@ -171,7 +171,7 @@ export const SignUp: React.FC = () => {
                             placeholder="Insira sua senha"
                             placeholderTextColor={
                                 theme[currentTheme || 'dark'].colors
-                                    .placeHolder
+                                    .placeholder
                             }
                             onChangeText={text => setPassword(text)}
                             returnKeyType="done"
@@ -188,7 +188,7 @@ export const SignUp: React.FC = () => {
                             placeholder="Insira sua senha"
                             placeholderTextColor={
                                 theme[currentTheme || 'dark'].colors
-                                    .placeHolder
+                                    .placeholder
                             }
                             onChangeText={text => setConfirmPassword(text)}
                             returnKeyType="done"

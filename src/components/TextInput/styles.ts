@@ -11,7 +11,7 @@ interface Theme {
         loadingIndicator: string,
         inputContainer: string,
         inputText: string,
-        placeHolder: string,
+        placeholder: string,
     };
 }
 

@@ -37,7 +37,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                             autoCapitalize="none"
                             placeholder="Insira seu e-mail"
                             placeholderTextColor={
-                                theme[currentTheme || 'dark'].colors.placeHolder
+                                theme[currentTheme || 'dark'].colors.placeholder
                             }
                             onChangeText={(text: string) => setEmail(text)}
                             returnKeyType="done"

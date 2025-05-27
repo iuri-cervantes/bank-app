@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, Alert } from 'react-native';
 import * as S from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../../hooks/useAuth';
+import { removeToken } from '../../../services/storage';
 
 
 export const RecoverPassword: React.FC = () => {
 
     const navigation = useNavigation();
-    const { isAuthenticated } = useAuth();
+
+
 
     return (
         <SafeAreaView >

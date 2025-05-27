@@ -12,7 +12,7 @@ export default {
         loadingIndicator: '#fff',
         inputContainer: '#8f8e8e',
         inputText: '#000',
-        placeHolder: '#2d2d2d',
+        placeholder: '#2d2d2d',
     },
     dark: true,
 }
