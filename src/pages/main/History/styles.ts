@@ -132,6 +132,9 @@ export const OclusionBtn = styled.TouchableOpacity`
     top: 20px;
 `;
 
+export const FilterBtn = styled.TouchableOpacity`
+`;
+
 
 export const BtnLine = styled.View`
   flex-direction: row;

@@ -23,7 +23,7 @@ const ptBrLabels: Record<string, string> = {
     Home: 'Início',
     Transfer: 'Transferências',
     Accounts: 'Contas',
-    History: 'Histórico'
+    History: 'Extrato'
 };
 
 const getTabIcon = (routeName: string, focused: boolean) => {

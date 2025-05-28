@@ -19,6 +19,7 @@ interface Theme {
 interface StyledProps {
   theme: Theme;
   cancel?: boolean;
+  width?: string;
 }
 
 
@@ -57,9 +58,36 @@ export const Header = styled.View<StyledProps>`
 
 export const InfoText = styled.Text<StyledProps>`
     ${({ theme }: StyledProps) => css`
-        color: ${theme.colors.infoLabelColor};
-        font-size: 16px;
+        color: ${theme.colors.mainLabelColor};
+        font-size: 15px;
+        margin: 10px;
+        width:80%;
     `}
+`;
+
+export const LabelText = styled.Text<StyledProps>`
+  ${({ theme }: StyledProps) => css`
+    color: ${theme.colors.mainLabelColor};
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+  `}
+`;
+
+export const Line = styled.View`
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+`;
+
+export const BtnLine = styled.View`
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 4px;
 `;
 
 export const BtnText = styled.Text<StyledProps>`
@@ -90,16 +118,17 @@ export const ButtonSubmit = styled.TouchableOpacity<StyledProps>`
 `;
 
 export const ButtonCancel = styled.TouchableOpacity<StyledProps>`
-  ${({ theme }: StyledProps) => css`
+  ${({ theme, width }: StyledProps) => css`
     background-color: ${theme.colors.mainBg};  
     border: 1px solid;
     border-color: ${theme.colors.btnColor};
     padding: 10px;
     align-items: center;
     justify-content: center;
-    width: 40%;
+    width: ${width ? width : '40%'};
     border-radius: 8px;
     margin: 20px 0px 20px 0px;
+    ${width && `margin: 5px 0px 0px 0px;`}
   `}
 `;
 
@@ -110,4 +139,7 @@ export const ButtonContainer = styled.View<StyledProps>`
     border-top-color: ${theme.colors.btnColor};
     border-top-width: 1px;
   `}
+`;
+
+export const FilterBtn = styled.TouchableOpacity`
 `;

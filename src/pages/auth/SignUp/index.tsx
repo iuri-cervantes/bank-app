@@ -204,13 +204,13 @@ export const SignUp: React.FC = () => {
                     </S.SectionWrapper>
                 </S.ContainerInfo>
             </S.MainContainer>
-            <ConfirmationModal
+            {/*<ConfirmationModal
                 email={resentEmail}
                 setEmail={setResentEmail}
                 isModalVisible={isConfirmModalVisible}
                 setIsModalVisible={setIsConfirmModalVisible}
                 handleExecuteAction={handleResendEmail}
-            />
+                        />*/}
         </>
     );
 };

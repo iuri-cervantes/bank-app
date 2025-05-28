@@ -9,9 +9,11 @@ import ChangeTheme from '../../../components/ChangeTheme';
 import LogOffIcon from '../../../assets/turn-off.png';
 import ViewIcon from '../../../assets/view.png';
 import HideIcon from '../../../assets/hide.png';
+import FilterIcon from '../../../assets/filtro.png';
 import AccountActionBtn from '../../../components/AccountActionBtn';
 import { apiGet } from '../../../services/api';
 import DropDownPicker from 'react-native-dropdown-picker';
+import ConfirmationModal from '../../../components/ConfirmationModal';
 
 
 interface BankAccount {
@@ -70,8 +72,19 @@ export const History: React.FC = () => {
     const [items, setItems] = useState<ItemType<number>[]>([]);
     const [filteredTransfers, setFilteredTransfers] = useState<BankAccountTransfer[]>([]);
     const [filterString, setFilterString] = useState('');
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
-    const navigation = useNavigation<NavigationProp<ParamListBase>>();;
+    const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+    const handleOpenConfirmModal = () => {
+        setIsConfirmModalVisible(true);
+    }
+
+    const handleCloseConfirmModal = () => {
+        setIsConfirmModalVisible(false);
+    }
+
+
     const handleLogout = async () => {
         await removeToken();
         navigation.reset({
@@ -125,7 +138,7 @@ export const History: React.FC = () => {
         useCallback(() => {
             getAccount();
             getHistory();
-        }, [selectedAccount]),
+        }, [selectedAccount, filterString]),
     );
 
     //tranforma o tipo do array para se adaptar ao tipo usado pela lib
@@ -170,7 +183,7 @@ export const History: React.FC = () => {
     const getHistory = async () => {
         setIsLoading(true);
         try {
-            let res = await apiGet<BankTransfersResponse>('/users/bank_account_transfers/statements');
+            let res = await apiGet<BankTransfersResponse>(`/users/bank_account_transfers/statements?${filterString}`);
             setHistoryData(res.bank_account_transfers);
         } catch (error: any) {
             Alert.alert('Erro!', error.response.data.error || 'Erro desconhecido, tente novamente mais tarde.');
@@ -186,11 +199,16 @@ export const History: React.FC = () => {
         const isIncoming = isSameAccount(item.to_bank_account, currentAccount);
 
 
+        /* trocado a forma de conversão pois gera inconsistencia nas datas com o fuso do backend
         const transferDate = new Date(item.created_at).toLocaleDateString('pt-BR');
         const transferTime = new Date(item.created_at).toLocaleTimeString('pt-BR', {
             hour: '2-digit',
             minute: '2-digit'
         });
+        */
+
+        const transferDate = `${item.created_at.slice(8, 10)}/${item.created_at.slice(5, 7)}/${item.created_at.slice(0, 4)}`;
+        const transferTime = `${item.created_at.slice(11, 16)}`;
 
         return (
             <S.TransferItem>
@@ -280,14 +298,24 @@ export const History: React.FC = () => {
                             />
                         </S.SectionWrapper>
                         <S.SectionWrapper>
-                            <S.LabelText>Transferências recentes</S.LabelText>
+                            <S.Line>
+                                <S.LabelText>Transferências</S.LabelText>
+                                <S.FilterBtn onPress={() => handleOpenConfirmModal()}>
+                                    <Image
+                                        source={FilterIcon}
+                                        tintColor={theme[currentTheme || 'dark'].colors.loadingIndicator}
+                                        style={{ width: 20, height: 20 }}
+                                    />
+                                </S.FilterBtn>
+                            </S.Line>
+
                             {filteredTransfers.length > 0 ? (
                                 <FlatList
                                     data={filteredTransfers}
                                     renderItem={renderTransferItem}
                                     keyExtractor={(item) => item.id.toString()}
                                     showsVerticalScrollIndicator={true}
-                                    style={{ maxHeight: 500, width: '100%', marginTop: 5 }}
+                                    style={{ maxHeight: 450, width: '100%', marginTop: 5 }}
                                 />
                             ) : (
                                 <S.InfoText>Nenhuma transferência encontrada para esta conta.</S.InfoText>
@@ -298,6 +326,13 @@ export const History: React.FC = () => {
                     </S.ContainerInfo>
                 )
             }
+            <ConfirmationModal
+                filterString={filterString}
+                setFilterString={setFilterString}
+                isModalVisible={isConfirmModalVisible}
+                setIsModalVisible={setIsConfirmModalVisible}
+                handleExecuteAction={() => console.log('')}
+            />
         </S.MainContainer>
     );
 };

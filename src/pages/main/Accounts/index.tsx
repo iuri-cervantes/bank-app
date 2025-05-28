@@ -185,11 +185,16 @@ export const Accounts: React.FC = () => {
         const isIncoming = isSameAccount(item.to_bank_account, currentAccount);
 
 
+        /*
         const transferDate = new Date(item.created_at).toLocaleDateString('pt-BR');
         const transferTime = new Date(item.created_at).toLocaleTimeString('pt-BR', {
             hour: '2-digit',
             minute: '2-digit'
         });
+        */
+
+        const transferDate = `${item.created_at.slice(8, 10)}/${item.created_at.slice(5, 7)}/${item.created_at.slice(0, 4)}`;
+        const transferTime = `${item.created_at.slice(11, 16)}`;
 
         return (
             <S.TransferItem>

@@ -32,7 +32,7 @@ export const Label = styled.Text<StyledProps>`
         gap: 10px;
         width: 100%;
         padding: 10px;
-        color: ${theme.colors.infoLabelColor};
+        color: ${theme.colors.mainLabelColor};
     `}
 `;
 
