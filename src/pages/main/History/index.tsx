@@ -38,7 +38,7 @@ interface ItemType<T> {
     value: number;
 };
 
-export const Home: React.FC = () => {
+export const History: React.FC = () => {
 
     const { currentTheme, handleChangeTheme } = useTheme();
     const [isLoading, setIsLoading] = useState(false);
@@ -106,8 +106,7 @@ export const Home: React.FC = () => {
             let res = await apiGet<BankAccountsResponse>('/users/bank_accounts/my');
             setAccountsData(res.user_bank_accounts);
         } catch (error: any) {
-            Alert.alert('Erro!', error.response.data.error || 'Erro desconhecido, tente novamente mais tarde.');
-            handleLogout();
+            Alert.alert('Erro!', error.response.data.message || 'Erro desconhecido, tente novamente mais tarde.');
         } finally {
             setIsLoading(false);
         }
@@ -168,9 +167,9 @@ export const Home: React.FC = () => {
                         </S.BtnLine>
                         <S.InfoText>O que deseja fazer?</S.InfoText>
                         <S.BtnLine>
-                            <AccountActionBtn title='Transferir' destiny='Transfer' iconName="transfer" />
-                            <AccountActionBtn title='Minhas contas' destiny='Accounts' iconName="accounts" />
-                            <AccountActionBtn title='Extrato' destiny='History' iconName="history" />
+                            <AccountActionBtn title='Transferir' destiny='Login' iconName="transfer" />
+                            <AccountActionBtn title='Minhas contas' destiny='Login' iconName="accounts" />
+                            <AccountActionBtn title='Extrato' destiny='Login' iconName="history" />
                         </S.BtnLine>
                     </S.ContainerInfo>
                 )

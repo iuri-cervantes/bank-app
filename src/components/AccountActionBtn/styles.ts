@@ -37,7 +37,7 @@ export const ButtonAccountAction = styled.TouchableOpacity<StyledProps>`
 
 export const InfoText = styled.Text<StyledProps>`
   ${({ theme }: StyledProps) => css`
-    color: ${theme.colors.infoLabelColor};
+    color: ${theme.colors.mainLabelColor};
     font-size: 16px;
     margin-top: 10px;
   `}
