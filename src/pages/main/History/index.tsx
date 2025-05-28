@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Alert, Image } from 'react-native';
+import { View, Text, SafeAreaView, Alert, Image, FlatList } from 'react-native';
 import * as S from './styles';
 import { NavigationProp, ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { removeToken } from '../../../services/storage';
@@ -13,8 +13,9 @@ import AccountActionBtn from '../../../components/AccountActionBtn';
 import { apiGet } from '../../../services/api';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+
 interface BankAccount {
-    id: number;
+    id?: number;
     bank_name: string;
     bank_code: string;
     agency_number: string;
@@ -24,9 +25,28 @@ interface BankAccount {
     account_type: 'corrente' | 'poupanca' | string;
     document: string;
     holder_name: string;
+    created_at?: string;
+    updated_at?: string;
+    amount?: number;
+}
+
+
+interface BankAccountTransfer {
+    id: number;
+    was_success: boolean;
+    transfer_type_text: string;
+    amount_to_transfer: number;
     created_at: string;
-    updated_at: string;
-    amount: number;
+    to_bank_account: BankAccount;
+    from_user_bank_account: BankAccount;
+}
+
+interface BankTransfersResponse {
+    bank_account_transfers: BankAccountTransfer[];
+    current_page: number;
+    per_page: number;
+    total_pages: number;
+    total_records: number;
 }
 
 interface BankAccountsResponse {
@@ -46,7 +66,10 @@ export const History: React.FC = () => {
     const [hideValue, setHideValue] = useState(true);
     const [selectedAccount, setSelectedAccount] = useState(0);
     const [accountsData, setAccountsData] = useState<BankAccount[]>([]);
+    const [historyData, setHistoryData] = useState<BankAccountTransfer[]>([]);
     const [items, setItems] = useState<ItemType<number>[]>([]);
+    const [filteredTransfers, setFilteredTransfers] = useState<BankAccountTransfer[]>([]);
+    const [filterString, setFilterString] = useState('');
 
     const navigation = useNavigation<NavigationProp<ParamListBase>>();;
     const handleLogout = async () => {
@@ -88,9 +111,20 @@ export const History: React.FC = () => {
         }));
     };
 
+    const isSameAccount = (account1: BankAccount, account2: BankAccount): boolean => {
+        return (
+            account1.bank_code === account2.bank_code &&
+            account1.agency_number === account2.agency_number &&
+            account1.agency_digit === account2.agency_digit &&
+            account1.account_number === account2.account_number &&
+            account1.account_digit === account2.account_digit
+        );
+    };
+
     useFocusEffect(
         useCallback(() => {
             getAccount();
+            getHistory();
         }, [selectedAccount]),
     );
 
@@ -100,17 +134,107 @@ export const History: React.FC = () => {
             setItems(transformToPickerItems(accountsData));
     }, [accountsData]);
 
+    //filtra as tranferencias por conta selecionada
+    useEffect(() => {
+        if (accountsData[selectedAccount] && historyData.length) {
+            const currentAccount = accountsData[selectedAccount];
+
+            const filtered = historyData.filter(transfer => {
+                const isFromAccount = isSameAccount(transfer.from_user_bank_account, currentAccount);
+                const isToAccount = isSameAccount(transfer.to_bank_account, currentAccount);
+
+                return isFromAccount || isToAccount;
+            });
+
+            setFilteredTransfers(filtered);
+        } else {
+            setFilteredTransfers([]);
+        }
+    }, [accountsData, selectedAccount, historyData]);
+
+
+
     const getAccount = async () => {
         setIsLoading(true);
         try {
             let res = await apiGet<BankAccountsResponse>('/users/bank_accounts/my');
             setAccountsData(res.user_bank_accounts);
         } catch (error: any) {
-            Alert.alert('Erro!', error.response.data.message || 'Erro desconhecido, tente novamente mais tarde.');
+            Alert.alert('Erro!', error.response.data.error || 'Erro desconhecido, tente novamente mais tarde.');
+            handleLogout();
         } finally {
             setIsLoading(false);
         }
     };
+
+    const getHistory = async () => {
+        setIsLoading(true);
+        try {
+            let res = await apiGet<BankTransfersResponse>('/users/bank_account_transfers/statements');
+            setHistoryData(res.bank_account_transfers);
+        } catch (error: any) {
+            Alert.alert('Erro!', error.response.data.error || 'Erro desconhecido, tente novamente mais tarde.');
+            handleLogout();
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const renderTransferItem = ({ item }: { item: BankAccountTransfer }) => {
+        const currentAccount = accountsData[selectedAccount];
+        const isOutgoing = isSameAccount(item.from_user_bank_account, currentAccount);
+        const isIncoming = isSameAccount(item.to_bank_account, currentAccount);
+
+
+        const transferDate = new Date(item.created_at).toLocaleDateString('pt-BR');
+        const transferTime = new Date(item.created_at).toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        return (
+            <S.TransferItem>
+                <S.TransferHeader>
+                    <S.TransferType>{item.transfer_type_text}</S.TransferType>
+                    <S.TransferDateTime>
+                        {transferDate} às {transferTime}
+                    </S.TransferDateTime>
+                    <S.TransferStatus isSuccess={item.was_success}>
+                        {item.was_success ? 'Sucesso' : 'Falhou'}
+                    </S.TransferStatus>
+                </S.TransferHeader>
+                <S.Line>
+                    <S.TransferDirection isOutgoing={isOutgoing}>
+                        {isOutgoing ? '↗ Transf. Enviada' : '↙ Transf. Recebida'}
+                    </S.TransferDirection>
+
+                    <S.TransferAmount isOutgoing={isOutgoing}>
+                        {isOutgoing ? '-' : '+'}R$ {item.amount_to_transfer.toFixed(2)}
+                    </S.TransferAmount>
+                </S.Line>
+                <S.TransferDetails>
+                    {isOutgoing ? (
+                        <>
+                            <S.DetailText>Para: {item.to_bank_account.holder_name}</S.DetailText>
+                            <S.DetailText>
+                                {item.to_bank_account.bank_name} - Conta: •••{item.to_bank_account.account_number.slice(-3)}
+                            </S.DetailText>
+                        </>
+                    ) : (
+                        <>
+                            <S.DetailText>De: {item.from_user_bank_account.holder_name}</S.DetailText>
+                            <S.DetailText>
+                                {item.from_user_bank_account.bank_name} - Conta: •••{item.from_user_bank_account.account_number.slice(-3)}
+                            </S.DetailText>
+                        </>
+                    )}
+                </S.TransferDetails>
+
+
+            </S.TransferItem>
+        );
+    };
+
 
 
 
@@ -142,9 +266,9 @@ export const History: React.FC = () => {
                                 style={{ width: 30, height: 30 }}
                             />
                         </S.LogOffBtn>
-                        <S.TitleText>Olá {accountsData[selectedAccount]?.holder_name}!</S.TitleText>
+                        <S.TitleText>Extrato</S.TitleText>
                         <S.SectionWrapper>
-                            <S.InfoText>Conta:</S.InfoText>
+                            <S.InfoText>Selecione sua conta:</S.InfoText>
                             <DropDownPicker
                                 open={dropdownOpen}
                                 value={selectedAccount}
@@ -155,22 +279,22 @@ export const History: React.FC = () => {
                                 placeholder={'Selecione sua conta.'}
                             />
                         </S.SectionWrapper>
-                        <S.BtnLine>
-                            <S.LabelText>Seu saldo:</S.LabelText>
-                            {hideValue ? (
-                                <S.LabelText>--------</S.LabelText>
-
+                        <S.SectionWrapper>
+                            <S.LabelText>Transferências recentes</S.LabelText>
+                            {filteredTransfers.length > 0 ? (
+                                <FlatList
+                                    data={filteredTransfers}
+                                    renderItem={renderTransferItem}
+                                    keyExtractor={(item) => item.id.toString()}
+                                    showsVerticalScrollIndicator={true}
+                                    style={{ maxHeight: 500, width: '100%', marginTop: 5 }}
+                                />
                             ) : (
-                                <S.LabelText>R$ {accountsData[selectedAccount]?.amount.toFixed(2)}</S.LabelText>
-                            )
-                            }
-                        </S.BtnLine>
-                        <S.InfoText>O que deseja fazer?</S.InfoText>
-                        <S.BtnLine>
-                            <AccountActionBtn title='Transferir' destiny='Login' iconName="transfer" />
-                            <AccountActionBtn title='Minhas contas' destiny='Login' iconName="accounts" />
-                            <AccountActionBtn title='Extrato' destiny='Login' iconName="history" />
-                        </S.BtnLine>
+                                <S.InfoText>Nenhuma transferência encontrada para esta conta.</S.InfoText>
+                            )}
+                        </S.SectionWrapper>
+
+
                     </S.ContainerInfo>
                 )
             }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'react-native';
 import TextInput from '../TextInput';
 import * as S from './styles';
@@ -7,27 +7,32 @@ import { useTheme } from '../../hooks/useTheme';
 
 interface ConfirmationModalProps {
     isModalVisible: boolean;
-    email: string;
-    setEmail: (email: string) => void;
+    filterString: string;
+    setFilterString: (filterString: string) => void;
     setIsModalVisible: (visible: boolean) => void;
     handleExecuteAction: () => void;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     isModalVisible,
-    email,
-    setEmail,
+    filterString,
+    setFilterString,
     setIsModalVisible,
     handleExecuteAction,
 }) => {
     const { currentTheme } = useTheme();
+    const [minValue, setMinValue] = useState('');
+    const [maxValue, setMaxValue] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [transferType, setTransferType] = useState('');
 
     return (
         <Modal transparent animationType="slide" visible={isModalVisible}>
             <S.FullScreenModal>
                 <S.ModalView>
                     <S.Header>
-                        <S.TitleText>Reenvio de e-mail</S.TitleText>
+                        <S.TitleText>Selecione os filtros desejados</S.TitleText>
                     </S.Header>
                     <S.ModalContent>
                         <TextInput
@@ -47,6 +52,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                         <S.ButtonSubmit onPress={handleExecuteAction}>
                             <S.BtnText>Reenviar</S.BtnText>
                         </S.ButtonSubmit>
+                        <S.ButtonCancel onPress={() => setIsModalVisible(false)}>
+                            <S.BtnText cancel>Limpar Filtros</S.BtnText>
+                        </S.ButtonCancel>
                         <S.ButtonCancel onPress={() => setIsModalVisible(false)}>
                             <S.BtnText cancel>Fechar</S.BtnText>
                         </S.ButtonCancel>
