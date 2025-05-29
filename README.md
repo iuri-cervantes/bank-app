@@ -26,6 +26,7 @@
     - Utilizar outra lib para estilização (mais eficiente como o nativeWind) foi utilizado o styled-components por maior familiaridade
     - Instalar um .env para guardar o endpoint de acesso (caso fosse uma api externa)
     - Instalar uma lib de icones (font-awesome) para assets mais padronizados ou utilizar svgs
+    - Ajustar as importações de imagens para ficarem mais condizentes com o padrão de importação no typescript (Não ocasiona erro porém gera o aviso no código)
     - Alguns ajustes para evitar repetição de codigo ex: interface de tema, componente de extrato
     - Centralizar algumas interfaces em um só arquivo
     - Criar um detalhamento de extratos e criar e exibir um comprovante no momento da transferência
