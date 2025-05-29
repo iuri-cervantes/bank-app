@@ -161,7 +161,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                                 color: theme[currentTheme || 'dark'].colors.inputText,
                             }}
                         />
-                        <S.InfoText>Selecione sua conta:</S.InfoText>
+                        <S.InfoText>Selecione o tipo de tranferência:</S.InfoText>
                         <DropDownPicker
                             open={dropdownOpen}
                             value={transferType}

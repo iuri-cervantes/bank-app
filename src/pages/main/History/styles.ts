@@ -87,6 +87,13 @@ export const LabelText = styled.Text<StyledProps>`
   `}
 `;
 
+export const FilterText = styled.Text<StyledProps>`
+  ${({ theme }: StyledProps) => css`
+    color: ${theme.colors.loadingIndicator};
+    font-size: 16px;
+  `}
+`;
+
 export const BtnText = styled.Text<StyledProps>`
   ${({ theme }: StyledProps) => css`
     color: ${theme.colors.btnLabel};
@@ -133,6 +140,8 @@ export const OclusionBtn = styled.TouchableOpacity`
 `;
 
 export const FilterBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: flex-end;
 `;
 
 

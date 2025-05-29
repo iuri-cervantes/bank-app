@@ -293,10 +293,11 @@ export const History: React.FC = () => {
                             <S.Line>
                                 <S.LabelText>Transferências</S.LabelText>
                                 <S.FilterBtn onPress={() => handleOpenConfirmModal()}>
+                                    <S.FilterText>Filtrar</S.FilterText>
                                     <Image
                                         source={FilterIcon}
                                         tintColor={theme[currentTheme || 'dark'].colors.loadingIndicator}
-                                        style={{ width: 20, height: 20 }}
+                                        style={{ width: 25, height: 25 }}
                                     />
                                 </S.FilterBtn>
                             </S.Line>
