@@ -8,7 +8,7 @@ export default {
         mainLabelColor: '#fff',
         btnLabel: "#fff",
         infoLabelColor: '#fff',
-        btnColor: '#5b2727',
+        btnColor: '#2f004a',
         loadingIndicator: '#fff',
         inputContainer: '#8f8e8e',
         inputText: '#000',

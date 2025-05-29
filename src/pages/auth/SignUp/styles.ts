@@ -31,7 +31,7 @@ export const MainContainer = styled.View<StyledProps>`
 
 
 
-export const ContainerInfo = styled.View<StyledProps>`
+export const ContainerInfo = styled.KeyboardAvoidingView<StyledProps>`
   ${({ theme }: StyledProps) => css`
     border-radius: 20px;
     width: 85%;
@@ -76,7 +76,9 @@ export const TitleText = styled.Text<StyledProps>`
 `;
 
 export const ButtonInvisible = styled.TouchableOpacity<StyledProps>`
-  ${({ theme }: StyledProps) => css``}
+  ${({ theme }: StyledProps) => css`
+    margin-bottom: 20px;
+  `}
 `;
 
 export const ButtonSubmit = styled.TouchableOpacity<StyledProps>`

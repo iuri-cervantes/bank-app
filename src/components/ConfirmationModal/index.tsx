@@ -6,6 +6,7 @@ import theme from '../../styles';
 import { useTheme } from '../../hooks/useTheme';
 import Calendar from 'react-native-calendar-range-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import MaskedTextInput, { Masks } from 'react-native-mask-input';
 import CalendarIcon from '../../assets/calendar.png';
 import XIcon from '../../assets/x.png';
 
@@ -83,12 +84,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     }
 
     const searchWithFilters = () => {
-        if (startDateInput.length > 0 && (endDateInput == null || endDateInput.length == 0)) {
-            Alert.alert('Atenção!', 'Selecione a data final para prosseguir!');
-            setDateSelecting(true);
-            return;
-        }
-        setFilterString(`start_date=${startDateInput}&end_date=${endDateInput}&min_value=${minValue}&max_value=${maxValue}&transfer_type=${transferType}`);
+        const sendMinValue = minValue.replace(/R\$\s*/g, '').replace(/\./g, '').replace(/,/g, '.');
+        const sendMaxValue = maxValue.replace(/R\$\s*/g, '').replace(/\./g, '').replace(/,/g, '.');
+
+        //tratamento no envio do endDate pois mandar 2 datas iguais retorna vazio
+        //ps: os registros do dia selecionado no endDate não é mostrado na listagem
+        setFilterString(`start_date=${startDateInput}&end_date=${startDateInput === endDateInput ? '' : endDateInput}&min_value=${sendMinValue}&max_value=${sendMaxValue}&transfer_type=${transferType}`);
         setIsModalVisible(false);
         handleExecuteAction();
     }
@@ -101,7 +102,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                         <S.TitleText>Selecione os filtros desejados</S.TitleText>
                     </S.Header>
                     <S.ModalContent>
-                        <TextInput
+                        {/*<TextInput
                             label="Valor minimo:"
                             value={minValue}
                             keyboardType="decimal-pad"
@@ -124,6 +125,41 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                             }
                             onChangeText={(text: string) => setMaxValue(text)}
                             returnKeyType="done"
+                        />*/}
+                        <S.InfoText>Valor Mínimo:</S.InfoText>
+                        <MaskedTextInput
+                            value={minValue}
+                            onChangeText={setMinValue}
+                            mask={Masks.BRL_CURRENCY}
+                            keyboardType="numeric"
+                            placeholder="R$ 0,00"
+                            style={{
+                                backgroundColor: theme[currentTheme || 'dark'].colors.inputContainer,
+                                borderColor: theme[currentTheme || 'dark'].colors.btnColor,
+                                borderWidth: 1,
+                                height: 60,
+                                borderRadius: 8,
+                                fontSize: 16,
+                                color: theme[currentTheme || 'dark'].colors.inputText,
+                            }}
+
+                        />
+                        <S.InfoText>Valor Máximo:</S.InfoText>
+                        <MaskedTextInput
+                            value={maxValue}
+                            onChangeText={setMaxValue}
+                            mask={Masks.BRL_CURRENCY}
+                            keyboardType="numeric"
+                            placeholder="R$ 0,00"
+                            style={{
+                                backgroundColor: theme[currentTheme || 'dark'].colors.inputContainer,
+                                borderColor: theme[currentTheme || 'dark'].colors.btnColor,
+                                borderWidth: 1,
+                                height: 60,
+                                borderRadius: 8,
+                                fontSize: 16,
+                                color: theme[currentTheme || 'dark'].colors.inputText,
+                            }}
                         />
                         <S.InfoText>Selecione sua conta:</S.InfoText>
                         <DropDownPicker
@@ -161,7 +197,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                             {startDateInput.length == 0 && endDateInput.length == 0 ? (
                                 <S.InfoText>Desde de o início</S.InfoText>
                             ) : (
-                                <S.InfoText>De {`${startDateInput?.slice(8, 10)}/${startDateInput?.slice(5, 7)}/${startDateInput?.slice(0, 4)}`} até {endDateInput != null && `${endDateInput?.slice(8, 10)}/${endDateInput?.slice(5, 7)}/${endDateInput?.slice(0, 4)}`}</S.InfoText>
+                                <S.InfoText>De {`${startDateInput?.slice(8, 10)}/${startDateInput?.slice(5, 7)}/${startDateInput?.slice(0, 4)}`} até {endDateInput != null && endDateInput != startDateInput ? `${endDateInput?.slice(8, 10)}/${endDateInput?.slice(5, 7)}/${endDateInput?.slice(0, 4)}` : 'hoje'}</S.InfoText>
                             )
                             }
                             <S.FilterBtn onPress={() => {
@@ -178,7 +214,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                                 <Image
                                     source={CalendarIcon}
                                     tintColor={theme[currentTheme || 'dark'].colors.loadingIndicator}
-                                    style={{ width: 15, height: 15 }}
+                                    style={{ width: 25, height: 25 }}
                                 />
                             </S.FilterBtn>
                         </S.Line>

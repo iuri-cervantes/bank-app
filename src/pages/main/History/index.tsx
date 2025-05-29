@@ -8,7 +8,6 @@ import { useTheme } from '../../../hooks/useTheme';
 import ChangeTheme from '../../../components/ChangeTheme';
 import LogOffIcon from '../../../assets/turn-off.png';
 import ViewIcon from '../../../assets/view.png';
-import HideIcon from '../../../assets/hide.png';
 import FilterIcon from '../../../assets/filtro.png';
 import AccountActionBtn from '../../../components/AccountActionBtn';
 import { apiGet } from '../../../services/api';
@@ -183,7 +182,7 @@ export const History: React.FC = () => {
     const getHistory = async () => {
         setIsLoading(true);
         try {
-            let res = await apiGet<BankTransfersResponse>(`/users/bank_account_transfers/statements?${filterString}`);
+            let res = await apiGet<BankTransfersResponse>(`/users/bank_account_transfers/statements?&per_page=10000&${filterString}`);
             setHistoryData(res.bank_account_transfers);
         } catch (error: any) {
             Alert.alert('Erro!', error.response.data.error || 'Erro desconhecido, tente novamente mais tarde.');
@@ -270,13 +269,6 @@ export const History: React.FC = () => {
                 (
                     <S.ContainerInfo>
                         <ChangeTheme />
-                        <S.OclusionBtn onPress={() => handleHideValue()}>
-                            <Image
-                                source={hideValue ? ViewIcon : HideIcon}
-                                tintColor={theme[currentTheme || 'dark'].colors.loadingIndicator}
-                                style={{ width: 30, height: 30 }}
-                            />
-                        </S.OclusionBtn>
                         <S.LogOffBtn onPress={() => handleLogoutChoice()}>
                             <Image
                                 source={LogOffIcon}
@@ -318,7 +310,7 @@ export const History: React.FC = () => {
                                     style={{ maxHeight: 450, width: '100%', marginTop: 5 }}
                                 />
                             ) : (
-                                <S.InfoText>Nenhuma transferência encontrada para esta conta.</S.InfoText>
+                                <S.InfoText>Nenhuma transferência encontrada para esta conta. {filterString && '\n\nTente trocar os filtros utilizados'}</S.InfoText>
                             )}
                         </S.SectionWrapper>
 
@@ -331,7 +323,7 @@ export const History: React.FC = () => {
                 setFilterString={setFilterString}
                 isModalVisible={isConfirmModalVisible}
                 setIsModalVisible={setIsConfirmModalVisible}
-                handleExecuteAction={() => console.log('')}
+                handleExecuteAction={() => { }}
             />
         </S.MainContainer>
     );

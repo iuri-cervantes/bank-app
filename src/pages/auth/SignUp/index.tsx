@@ -128,7 +128,10 @@ export const SignUp: React.FC = () => {
 
         <>
             <S.MainContainer>
-                <S.ContainerInfo>
+                <S.ContainerInfo
+                    behavior={'padding'}
+                    enable={true}
+                >
                     <ChangeTheme />
                     <S.SectionWrapper>
                         <S.TitleText>Cadastre-se</S.TitleText>

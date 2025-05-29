@@ -20,6 +20,7 @@
     "react-native": "0.79.2",
     "react-native-calendar-range-picker": "^1.6.0",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-mask-input": "^1.2.3",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-styled-components": "^2.1.0",
