@@ -12,8 +12,8 @@
     - Tela de tranferências (O usuário escolhe uma de suas contas e faz uma tranferencia para uma conta de outro usuário)
     - Painel de contas onde o usuário tem informações das suas contas (Agência, número, ultimas transações, etc)
     - Tela de extrato, onde o usuário tem acesso à todas as tranferências enviadas/recebidas por cada uma de suas contas
-      - A lista de extrato
- conta com diversos filtros (valores minimo e maximo, tipo da tranferencia e datas)
+      - A lista de extrato conta com diversos filtros (valores minimo e maximo, tipo da tranferencia e datas)
+            *obs: é possivel fazer a filtragem de datas selecionando apenas data de inicio ou data de inicio e fim.
 - Endpoints utilizados:
     - '/auth/sign_in' - put
     - '/auth/sign_up' put 
