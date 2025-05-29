@@ -22,6 +22,7 @@
     - '/users/bank_accounts' - get
     - '/users/bank_account_transfers' - post - tranferências
 - O que faria diferente se tivesse mais tempo:
+    - Tocar a landingpage padrão por uma personalizada
     - Utilizar outra lib para estilização (mais eficiente como o nativeWind) foi utilizado o styled-components por maior familiaridade
     - Instalar um .env para guardar o endpoint de acesso (caso fosse uma api externa)
     - Instalar uma lib de icones (font-awesome) para assets mais padronizados ou utilizar svgs
